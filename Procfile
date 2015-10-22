@@ -1,1 +1,1 @@
-ai: ruby genghis-khan.rb -p $PORT
+web: ruby ai.rb -p $PORT
