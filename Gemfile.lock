@@ -1,7 +1,7 @@
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: git@github.com:mathieugagne/berlin-ai.git
+  revision: 8a772477c291e6e49acf23383b82c7b7af1abdf3
   specs:
-    backports (3.6.6)
     berlin-ai (0.0.39)
       rainbow (~> 1.1.4)
       ruby-terminfo
@@ -9,11 +9,16 @@ GEM
       sinatra-contrib (= 1.4.1)
       thin (= 1.5.1)
       yajl-ruby (= 1.1.0)
-    daemons (1.2.3)
-    eventmachine (1.0.8)
-    multi_json (1.11.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    backports (3.24.1)
+    daemons (1.4.1)
+    eventmachine (1.2.7)
+    multi_json (1.15.0)
     rack (1.6.4)
-    rack-protection (1.5.3)
+    rack-protection (1.5.5)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -41,7 +46,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  berlin-ai
-
-BUNDLED WITH
-   1.10.6
+  berlin-ai!
+  rack-test (= 0.6.3)

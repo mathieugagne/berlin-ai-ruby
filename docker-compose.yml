@@ -1,0 +1,97 @@
+# version: "3.8"
+
+# x-app: &app
+#   build:
+#     context: .docker/sinatra
+#     args:
+#       DOCKER_IMAGE: "ruby:2.2.2-wheezy"
+#       USER_UID: "${UID:-1000}"
+#       USER_GID: "${GID:-100}"
+#   environment: &env
+#     APP_HOST: sinatra
+#   image: berlin-ai:latest
+#   user: dev
+#   tmpfs:
+#     - /tmp
+#   networks:
+#     - default
+#   extra_hosts:
+#     - host.docker.internal:host-gateway
+
+# x-backend: &backend
+#   <<: *app
+#   stdin_open: true
+#   tty: true
+#   volumes:
+#     - .:/app:cached
+#     - bundle:/usr/local/bundle
+#   environment:
+#     <<: *env
+#     HISTFILE: /app/log/.bash_history
+
+# services:  # Used to locally test the reserve proxy that we use in production env
+#   nginx:
+#     build:
+#       context: .docker/nginx
+#       args:
+#         app_host: "sinatra"
+#         app_port: "4567"
+#     ports:
+#       - "8080:80"
+#   runner:
+#     <<: *backend
+#     command: /bin/bash
+#     # Inline command in this service doesn't catch SIGTERM to stop so we have to send directly a SIGKILL
+#     stop_signal: SIGKILL
+#   sinatra:
+#     <<: *backend
+#     entrypoint: ./entrypoint.sh
+#     command: "ruby ai.rb --verbose"
+#     ports:
+#       - "4567:4567"
+#
+# volumes:
+#   bundle:
+version: "3.8"
+
+x-app: &app
+  build:
+    args:
+      USER_UID: "${UID:-1000}"
+      USER_GID: "${GID:-100}"
+  image: berlin-ai:latest
+  user: dev
+  tmpfs:
+    - /tmp
+  networks:
+    - default
+  extra_hosts:
+    - host.docker.internal:host-gateway
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/app:cached
+    - bundle:/usr/local/bundle
+    - ~/.ssh/:/home/dev/.ssh/:ro
+  environment:
+    HISTFILE: /app/log/.bash_history
+
+services:
+  runner:
+    <<: *backend
+    command: /bin/bash
+    # Inline command in this service doesn't catch SIGTERM to stop so we have to send directly a SIGKILL
+    stop_signal: SIGKILL
+  sinatra:
+    <<: *backend
+    entrypoint: ./entrypoint.sh
+
+networks:
+  default:
+    name: berlin-ai-ruby
+
+volumes:
+  bundle:

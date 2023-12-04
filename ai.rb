@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'berlin-ai'         # Require the berlin-ai library.
 
 class Berlin::AI::Player

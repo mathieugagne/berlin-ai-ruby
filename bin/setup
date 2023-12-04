@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+# path to your application root.
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  puts args
+  system({ "UID" => Process.uid.to_s, "GID" => Process.gid.to_s }, *args) || abort("\n== Command #{args} failed ==")
+end
+
+FileUtils.chdir APP_ROOT do
+  # Setup docker
+  puts "\n== Stopping old services =="
+  system! "docker compose stop"
+
+  puts "\n== Rebuild runner =="
+  system! "docker compose build runner"
+
+  puts "\n== Starting services =="
+  system! "docker compose up --detach --remove-orphans runner"
+
+  puts "\n== Fix container permissions =="
+  system! "docker compose exec --user root runner chown -R $(id -u):$(id -g) /usr/local/bundle/ || :"
+
+  # puts "\n== Install berlin-ai locally =="
+  # system! "docker compose exec runner 'cd berlin-ai && gem build berlin-ai.gemspec && gem install berlin-ai-0.0.39.gem'"
+
+  puts "\n== Install bundle dependencies =="
+  # system! "docker compose exec runner bundle config local.berlin-ai"
+  system! "git config --global http.sslVerify false"
+  system! "export GIT_SSL_NO_VERIFY=1"
+  system! "docker compose exec runner bundle install"
+end

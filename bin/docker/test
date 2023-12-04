@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../../lib/docker_compose"
+
+command_line = "ruby ai.rb --test 1 --port 6789"
+DockerCompose.run(options: "--rm --service-ports --use-aliases", service: "sinatra", command_line: command_line)

@@ -1,1 +1,0 @@
-web: ruby ai.rb -p $PORT
