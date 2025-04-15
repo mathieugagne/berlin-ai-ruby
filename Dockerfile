@@ -1,4 +1,4 @@
-FROM ruby:1.9-wheezy
+FROM corgibytes/ruby-1.9.3
 
 ARG USER_UID
 ARG USER_GID
