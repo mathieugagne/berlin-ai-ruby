@@ -15,7 +15,9 @@ x-backend: &backend
   volumes:
     - .:/app:cached
     - bundle:/usr/local/bundle
-    - ~/.ssh/:/home/dev/.ssh/:ro
+    - ~/.ssh/id_rsa:/home/dev/.ssh/id_rsa:ro
+    - ~/.ssh/id_rsa.pub:/home/dev/.ssh/id_rsa.pub:ro
+    - ~/.ssh/known_hosts:/home/dev/.ssh/known_hosts
   environment:
     HISTFILE: /app/log/.bash_history
 
