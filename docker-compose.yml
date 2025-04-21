@@ -7,10 +7,6 @@ x-app: &app
   user: dev
   tmpfs:
     - /tmp
-  networks:
-    - default
-  extra_hosts:
-    - host.docker.internal:host-gateway
 
 x-backend: &backend
   <<: *app
@@ -32,10 +28,6 @@ services:
   sinatra:
     <<: *backend
     entrypoint: ./entrypoint.sh
-
-networks:
-  default:
-    name: berlin-ai-ruby
 
 volumes:
   bundle:
