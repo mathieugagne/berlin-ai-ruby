@@ -1,4 +1,4 @@
-FROM corgibytes/ruby-1.9.3
+FROM ruby:3.4
 
 ARG USER_UID
 ARG USER_GID
@@ -7,7 +7,6 @@ ARG USER_GID
 RUN useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m dev
 
 # Common dependencies
-RUN rm /etc/apt/sources.list && echo 'deb http://archive.debian.org/debian wheezy main' | tee -a /etc/apt/sources.list
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get install -yq --force-yes --no-install-recommends \
   build-essential \
